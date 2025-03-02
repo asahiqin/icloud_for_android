@@ -1,0 +1,43 @@
+[project]
+name = "icloud-for-android"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "Asahi Qin", email = "qjasnfinder@icloud.com" }
+]
+dependencies = [
+    "flet==0.27.1",
+    "pyicloud @ git+https://github.com/timlaing/pyicloud.git"
+]
+
+[tool.flet]
+# org name in reverse domain name notation, e.g. "com.mycompany".
+# Combined with project.name to build bundle ID for iOS and Android apps
+org = "io.asahiqin.icloudforandroid"
+
+# project display name that is used as an app title on Android and iOS home screens,
+# shown in window titles and about app dialogs on desktop.
+product = "icloud-for-android"
+
+# company name to display in about app dialogs
+company = "AsahiQin"
+
+# copyright text to display in about app dialogs
+copyright = "Copyright (C) 2025 by AsahiQin"
+
+[tool.flet.app]
+path = "./"
+
+[tool.uv]
+dev-dependencies = [
+    "flet[all]==0.27.1",
+    "poetry-dynamic-versioning==0.13.0"
+]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.group.dev.dependencies]
+flet = { extras = ["all"], version = "0.27.1" }
