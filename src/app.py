@@ -3,7 +3,42 @@ from flet.core.template_route import TemplateRoute
 
 from src.login.login import Login
 from src.login.try_login import TryLogin
-from src.store import Store
+from src.login.two_factor_auth import TwoFactorAuthentication
+from src.navbar import NavBar, page_index_map
+from src.pages.devices import DevicesPage
+from src.pages.settings import SettingsPage
+from src.store import Store, DEBUG_MODE
+
+
+class RootPage(flet.View):
+    def __init__(self, navbar: NavBar):
+        super().__init__("/")
+        self.navbar = navbar
+        self.navbar.on_change = self.handle_navbar_change
+        self.content = flet.Placeholder()
+        self.controls = [
+            flet.Row(
+                expand=True,
+                controls=[
+                    self.navbar,
+                    flet.VerticalDivider(),
+                    self.content
+                ]
+            )
+        ]
+
+    def on_route_change(self, content):
+        self.content = content
+        self.controls[0].controls.pop()
+        self.controls[0].controls.append(self.content)
+        self.update()
+
+    def handle_navbar_change(self, e):
+        print(self.page)
+        self.navbar.selected_index = e.control.selected_index
+        self.page.go(page_index_map.inverse[self.navbar.selected_index])
+        print(f"Selected index: {self.navbar.selected_index}")
+        self.page.update()
 
 
 class App:
@@ -11,6 +46,7 @@ class App:
         self.page = page
         self.page.on_route_change = self.route_change
         self.data = Store(page)
+        self.root = RootPage(NavBar(self.page))
 
     async def init(self):
         await self.data.load_from_device()
@@ -19,19 +55,32 @@ class App:
     def default_route(self):
         self.page.views.clear()
         self.page.route = "/login"
+
+        if DEBUG_MODE:
+            self.page.route = "/"
+            self.route_change(None)
+        # self.route_change(None)
         self.page.update()
 
     def route_change(self, _):
         t_route = TemplateRoute(self.page.route)
-        if t_route.match("/main"):
+        print(t_route.route)
+        if t_route.match("/"):
             self.page.views.append(
-                flet.View(
-                    "/main",
-                    [
-                        flet.Text("Welcome to Flet!")
-                    ],
+                self.root
+            )
+            self.page.update()
+            self.page.go("/devices")
+        elif t_route.match("/devices"):
+            self.root.on_route_change(
+                flet.Row(
+                    controls=[DevicesPage(self.data)],
+                    expand=True,
+                    alignment=flet.MainAxisAlignment.START
                 )
             )
+        elif t_route.match("/settings"):
+            self.root.on_route_change(SettingsPage())
         elif t_route.match("/login"):
             self.page.views.append(
                 flet.View(
@@ -41,7 +90,7 @@ class App:
                             controls=[flet.Row([Login(self.data)], alignment=flet.MainAxisAlignment.CENTER)],
                             alignment=flet.MainAxisAlignment.CENTER,
                             expand=True,
-                        ),]
+                        ), ]
                 )
             )
         elif t_route.match("/loading_login/:account/:password/"):
@@ -51,4 +100,15 @@ class App:
                     [TryLogin(t_route.account, t_route.password, self.data, self.page)]
                 )
             )
+        elif t_route.match("/2fa"):
+            self.page.views.append(
+                flet.View(
+                    "/2fa",
+                    [
+                        TwoFactorAuthentication(self.page, self.data)
+                    ],
+                )
+            )
+        else:
+            self.page.views.clear()
         self.page.update()

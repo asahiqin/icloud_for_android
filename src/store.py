@@ -1,5 +1,8 @@
 import flet
 from pyicloud import PyiCloudService
+from pyicloud.services.findmyiphone import AppleDevice
+
+DEBUG_MODE = False
 
 
 class Store:
@@ -9,7 +12,8 @@ class Store:
         self.china_mainland_option: bool = False
         self.remember_me_option: bool = False
         self.page = page
-        self.api:PyiCloudService | None = None
+        self.api: PyiCloudService | None = None
+        self.devices: dict[str, AppleDevice] | None = None
 
     def store_to_device(self):
         store_data = [

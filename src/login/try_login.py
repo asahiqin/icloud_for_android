@@ -43,6 +43,11 @@ class TryLogin(Column):
                                              china_mainland=self.store.china_mainland_option)
             if self.store.api.requires_2fa:
                 self.page.go("/login/2fa")
+            else:
+                self.page.views.clear()
+                self.page.route = "/"
+                self.page.update()
+                print("Logged in successfully")
         except KeyError as _:
             self.controls = [
                 Text(f"Error to Login: Password or Username is incorrect."),

@@ -9,7 +9,8 @@ authors = [
 ]
 dependencies = [
     "flet==0.27.1",
-    "pyicloud @ git+https://github.com/timlaing/pyicloud.git"
+    "pyicloud @ git+https://github.com/timlaing/pyicloud.git",
+    "bidict==0.23.1"
 ]
 
 [tool.flet]
