@@ -10,7 +10,8 @@ authors = [
 dependencies = [
     "flet==0.27.1",
     "pyicloud @ git+https://github.com/timlaing/pyicloud.git",
-    "bidict==0.23.1"
+    "bidict==0.23.1",
+    "flet-permission-handler==0.1.0"
 ]
 
 [tool.flet]
@@ -42,3 +43,6 @@ package-mode = false
 
 [tool.poetry.group.dev.dependencies]
 flet = { extras = ["all"], version = "0.27.1" }
+
+[tool.flet.flutter.dependencies]
+flet-permission-handler = "0.1.0"

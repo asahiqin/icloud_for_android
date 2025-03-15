@@ -8,14 +8,13 @@ from src.store import Store
 
 
 class TryLogin(Column):
-    def __init__(self, username, password, store: Store, page: Page):
+    def __init__(self, username, password, store: Store):
         super().__init__()
         self.username = username
         self.password = password
         self.store = store
         self.expand = True
         self.alignment = MainAxisAlignment.CENTER
-        self.page = page
         self.controls = [
             Row(
                 controls=[
@@ -40,7 +39,7 @@ class TryLogin(Column):
     async def try_login(self):
         try:
             self.store.api = PyiCloudService(self.username, self.password,
-                                             china_mainland=self.store.china_mainland_option)
+                                             china_mainland=self.store.china_mainland_option, with_family=True)
             if self.store.api.requires_2fa:
                 self.page.go("/login/2fa")
             else:

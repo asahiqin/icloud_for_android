@@ -4,12 +4,17 @@ from flet.core.page import Page
 
 
 class BackButton(IconButton):
-    def __init__(self, page: Page):
+    def __init__(self, route: str = ""):
         super().__init__()
-        self.page = page
         self.icon = Icons.ARROW_BACK
+        self.on_click = self.view_pop
+        self.route = route
 
-    def view_pop(self, view):
+    def view_pop(self, _):
         self.page.views.pop()
         top_view = self.page.views[-1]
-        self.page.go(top_view.route)
+        print("Back:"+top_view.route)
+        if self.route == "":
+            self.page.go(top_view.route)
+        else:
+            self.page.go(self.route)

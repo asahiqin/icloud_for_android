@@ -1,11 +1,15 @@
+import base64
+
 import flet
 from flet.core.template_route import TemplateRoute
 
+from src.back_button import BackButton
 from src.login.login import Login
 from src.login.try_login import TryLogin
 from src.login.two_factor_auth import TwoFactorAuthentication
 from src.navbar import NavBar, page_index_map
 from src.pages.devices import DevicesPage
+from src.pages.devices_info import DevicesInfoPage
 from src.pages.settings import SettingsPage
 from src.store import Store, DEBUG_MODE
 
@@ -46,7 +50,7 @@ class App:
         self.page = page
         self.page.on_route_change = self.route_change
         self.data = Store(page)
-        self.root = RootPage(NavBar(self.page))
+        self.root = RootPage(NavBar())
 
     async def init(self):
         await self.data.load_from_device()
@@ -72,11 +76,22 @@ class App:
             self.page.update()
             self.page.go("/devices")
         elif t_route.match("/devices"):
+            print("Page devices")
             self.root.on_route_change(
                 flet.Row(
-                    controls=[DevicesPage(self.data)],
+                    controls=[DevicesPage(self.data, self.root)],
                     expand=True,
                     alignment=flet.MainAxisAlignment.START
+                )
+            )
+        elif t_route.match("/devices/:device_id_base64/"):
+            device_id = base64.b64decode(t_route.device_id_base64).decode('utf-8')
+            self.page.views.append(
+                flet.View(
+                    "/devices/"+t_route.device_id_base64,
+                    [DevicesInfoPage(self.data, device_id)],
+                    appbar=flet.AppBar(title=flet.Text(f"{self.data.devices[device_id]['name']}"),
+                                       leading=BackButton("/devices")),
                 )
             )
         elif t_route.match("/settings"):
@@ -97,7 +112,7 @@ class App:
             self.page.views.append(
                 flet.View(
                     f"/loading_login/{t_route.account}/{t_route.password}",
-                    [TryLogin(t_route.account, t_route.password, self.data, self.page)]
+                    [TryLogin(t_route.account, t_route.password, self.data)]
                 )
             )
         elif t_route.match("/2fa"):

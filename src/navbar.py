@@ -9,11 +9,11 @@ page_index_map = bidict({
 
 
 class NavBar(NavigationRail):
-    def __init__(self, page: Page):
+    def __init__(self):
         super().__init__()
         self.destinations = [
             NavigationRailDestination(
-                icon=Icons.PHONE,
+                icon=Icons.DEVICES_OTHER,
                 label="Devices",
             ),
             NavigationRailDestination(
@@ -22,7 +22,6 @@ class NavBar(NavigationRail):
             )
         ]
         self.selected_index = 0
-        self.page = page
         self.label_type = NavigationRailLabelType.ALL
         self.min_width = 100
         self.min_extended_width = 400
