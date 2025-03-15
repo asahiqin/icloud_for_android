@@ -1,81 +1,19 @@
-# IcloudForAndroid app
+<h1 align="center">iCloud for Android</h3>
+<p align="center">Brings Apple's iCloud into Android Devices</p>
 
-## Run the app
+---
 
-### uv
+This app provide a way to use iCloud devices on Android devices.You can consider it as a bridge between iOS and Android.  
 
-Run as a desktop app:
+However,you must have an iDevice,like iPhone or iPad,to use the full functions of iCloud and manage it.  
 
-```
-uv run flet run
-```
+# Todo List
+- Manager Your iDevices
+- View the event
+- Operate the files on iCloud
+- Downlaod and uplaod photos
 
-Run as a web app:
+# Others
+This app is powered by [pyicloud](https://github.com/timlaing/pyicloud),a fork from original pyicloud.  
 
-```
-uv run flet run --web
-```
-
-### Poetry
-
-Install dependencies from `pyproject.toml`:
-
-```
-poetry install
-```
-
-Run as a desktop app:
-
-```
-poetry run flet run
-```
-
-Run as a web app:
-
-```
-poetry run flet run --web
-```
-
-For more details on running the app, refer to the [Getting Started Guide](https://flet.dev/docs/getting-started/).
-
-## Build the app
-
-### Android
-
-```
-flet build apk -v
-```
-
-For more details on building and signing `.apk` or `.aab`, refer to the [Android Packaging Guide](https://flet.dev/docs/publish/android/).
-
-### iOS
-
-```
-flet build ipa -v
-```
-
-For more details on building and signing `.ipa`, refer to the [iOS Packaging Guide](https://flet.dev/docs/publish/ios/).
-
-### macOS
-
-```
-flet build macos -v
-```
-
-For more details on building macOS package, refer to the [macOS Packaging Guide](https://flet.dev/docs/publish/macos/).
-
-### Linux
-
-```
-flet build linux -v
-```
-
-For more details on building Linux package, refer to the [Linux Packaging Guide](https://flet.dev/docs/publish/linux/).
-
-### Windows
-
-```
-flet build windows -v
-```
-
-For more details on building Windows package, refer to the [Windows Packaging Guide](https://flet.dev/docs/publish/windows/).
+Thanks to the contributor,this app have such functions.
