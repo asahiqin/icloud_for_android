@@ -1,4 +1,5 @@
 import flet
+from pyicloud import PyiCloudService
 
 from src.app import App
 
@@ -8,4 +9,5 @@ async def main(page: flet.Page):
     await app.init()
 
 
-flet.app(target=main)
+if __name__ == "__main__":
+    flet.app(target=main)

@@ -2,7 +2,11 @@ import flet
 from pyicloud import PyiCloudService
 from pyicloud.services.findmyiphone import AppleDevice
 
+from src.test.test_pyicloud import TestPyiCloudService
+
 DEBUG_MODE = False
+
+iCloudService = PyiCloudService if not DEBUG_MODE else TestPyiCloudService
 
 
 class Store:
@@ -14,6 +18,8 @@ class Store:
         self.page = page
         self.api: PyiCloudService | None = None
         self.devices: dict[str, AppleDevice] | None = None
+        self.BAIDU_API_KEY = ""
+        self.GOOGLE_API_KEY = ""
 
     def store_to_device(self):
         store_data = [
@@ -32,6 +38,14 @@ class Store:
             {
                 "k": "remember_me_option",
                 "v": self.remember_me_option
+            },
+            {
+                "k": "BAIDU_API_KEY",
+                "v": self.BAIDU_API_KEY
+            },
+            {
+                "k": "GOOGLE_API_KEY",
+                "v": self.GOOGLE_API_KEY
             }
         ]
         for item in store_data:
@@ -46,3 +60,7 @@ class Store:
         self.china_mainland_option = self.china_mainland_option if self.china_mainland_option is not None else False
         self.remember_me_option = await self.page.client_storage.get_async("remember_me_option")
         self.remember_me_option = self.remember_me_option if self.remember_me_option is not None else False
+        self.BAIDU_API_KEY = await self.page.client_storage.get_async("BAIDU_API_KEY")
+        self.BAIDU_API_KEY = self.BAIDU_API_KEY if self.BAIDU_API_KEY is not None else ""
+        self.GOOGLE_API_KEY = await self.page.client_storage.get_async("GOOGLE_API_KEY")
+        self.GOOGLE_API_KEY = self.GOOGLE_API_KEY if self.GOOGLE_API_KEY is not None else ""

@@ -11,7 +11,7 @@ from src.navbar import NavBar, page_index_map
 from src.pages.devices import DevicesPage
 from src.pages.devices_info import DevicesInfoPage
 from src.pages.settings import SettingsPage
-from src.store import Store, DEBUG_MODE
+from src.store import Store
 
 
 class RootPage(flet.View):
@@ -60,9 +60,6 @@ class App:
         self.page.views.clear()
         self.page.route = "/login"
 
-        if DEBUG_MODE:
-            self.page.route = "/"
-            self.route_change(None)
         # self.route_change(None)
         self.page.update()
 
@@ -96,10 +93,10 @@ class App:
             )
         elif t_route.match("/settings"):
             self.root.on_route_change(SettingsPage())
-        elif t_route.match("/login"):
+        elif t_route.match("/login/"):
             self.page.views.append(
                 flet.View(
-                    "/login",
+                    "/login/",
                     [
                         flet.Column(
                             controls=[flet.Row([Login(self.data)], alignment=flet.MainAxisAlignment.CENTER)],
@@ -115,10 +112,10 @@ class App:
                     [TryLogin(t_route.account, t_route.password, self.data)]
                 )
             )
-        elif t_route.match("/2fa"):
+        elif t_route.match("/login/2fa"):
             self.page.views.append(
                 flet.View(
-                    "/2fa",
+                    "/login/2fa",
                     [
                         TwoFactorAuthentication(self.page, self.data)
                     ],

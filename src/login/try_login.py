@@ -1,10 +1,7 @@
-import asyncio
-
 from flet import *
-from pyicloud import PyiCloudService
 
-from src.back_button import BackButton
 from src.store import Store
+from src.store import iCloudService
 
 
 class TryLogin(Column):
@@ -34,12 +31,12 @@ class TryLogin(Column):
         ]
 
     def did_mount(self):
-        self.page.run_task(self.try_login)
+        self.try_login()
 
-    async def try_login(self):
+    def try_login(self):
         try:
-            self.store.api = PyiCloudService(self.username, self.password,
-                                             china_mainland=self.store.china_mainland_option, with_family=True)
+            self.store.api = iCloudService(self.username, self.password,
+                                           china_mainland=self.store.china_mainland_option, with_family=True)
             if self.store.api.requires_2fa:
                 self.page.go("/login/2fa")
             else:

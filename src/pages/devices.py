@@ -1,12 +1,9 @@
 import base64
-from time import sleep
 
 from flet import *
 from dataclasses import dataclass
 
-from src.store import DEBUG_MODE
 from src.store import Store
-from src.test_data.devices import test_devices
 
 
 class DevicesPage(Column):
@@ -32,9 +29,7 @@ class DevicesPage(Column):
         self.view.floating_action_button = None
 
     async def update_devices(self):
-        if DEBUG_MODE:
-            devices = test_devices
-        elif self.store.devices is None:
+        if self.store.devices is None:
             devices = self.store.api.devices
         else:
             devices = self.store.devices

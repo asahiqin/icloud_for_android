@@ -10,6 +10,7 @@ class TwoFactorAuthentication(Column):
         self.page = page
         self.store = store
         self.code = TextField(label="Your 2FA code")
+        self.expand = True
         self.controls = [
             Row(
                 controls=[
@@ -30,6 +31,16 @@ class TwoFactorAuthentication(Column):
     def submit(self, _):
         api = self.store.api
         code = self.code.value
+        self.controls[0].controls = [
+            Column(
+                [
+                    Text("Validating code..."),
+                    ProgressRing()
+                ],
+                alignment=MainAxisAlignment.CENTER
+            )
+        ]
+        self.page.update()
         result = self.store.api.validate_2fa_code(code)
         if result:
             if not api.is_trusted_session:
@@ -38,14 +49,23 @@ class TwoFactorAuthentication(Column):
                 print("Session trust result %s" % result)
 
                 if not result:
-                    AlertDialog(content=Text("Failed to request trust. You will likely be prompted for the code again "
-                                             "in the coming weeks"))
-            self.page.go("/home")
+                    dialog = AlertDialog(content=Text("Failed to request trust. You will likely be prompted for the "
+                                                      "code again in the coming weeks"))
+                    self.page.open(dialog)
+            self.page.views.clear()
+            self.page.route = "/"
+            self.page.update()
         else:
             self.controls[0].controls = [
-                Text("Invalid code. Please try again."),
-                Button(text="Back", on_click=self.back)
+                Column(
+                    [
+                        Text("Invalid code. Please try again."),
+                        Button(text="Back", on_click=self.back)
+                    ],
+                    alignment=MainAxisAlignment.CENTER
+                )
             ]
+            self.page.update()
 
     def back(self, _):
         self.page.views.pop()

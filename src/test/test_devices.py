@@ -75,7 +75,7 @@ iphone = {
         "locationFinished": True,
         "verticalAccuracy": 0.0,
         "locationMode": None,
-        "longitude": 100
+        "longitude": 0.0
     },
     "deviceModel": "iphone13-1-6-0",
     "maxMsgChar": 160,
@@ -223,7 +223,7 @@ ipad = {
         "locationFinished": False,
         "verticalAccuracy": 0.0,
         "locationMode": None,
-        "longitude": 100
+        "longitude": 0.0
     },
     "deviceModel": "SecondGen-3b3b3c-99989b",
     "maxMsgChar": 160,
