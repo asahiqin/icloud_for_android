@@ -1,6 +1,5 @@
-
 from flet import *
-from src.store import Store
+from src.store import Store, DEBUG_MODE
 
 
 class Login(Column):
@@ -8,7 +7,7 @@ class Login(Column):
         super().__init__()
         self.store = store
         self.account = TextField(label='Account', value=self.store.account)
-        self.password = TextField(label='Password',password=True, value=self.store.password)
+        self.password = TextField(label='Password', password=True, value=self.store.password)
         self.china_mainland = Checkbox(label='China Mainland', value=self.store.china_mainland_option)
         self.login_button = ElevatedButton(text='Login', on_click=self.login)
         self.remember_data = Checkbox(label='Remember', value=self.store.remember_me_option)
@@ -21,6 +20,10 @@ class Login(Column):
             self.login_button
         ]
         self.alignment = alignment.center
+
+    def did_mount(self):
+        if DEBUG_MODE:
+            self.login(None)
 
     def login(self, _):
         account = self.account.value

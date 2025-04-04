@@ -1,4 +1,4 @@
-<h1 align="center">iCloud for Android</h3>
+<h1 align="center">iCloud for Android</h1>
 <p align="center">Brings Apple's iCloud into Android Devices</p>
 
 ---
@@ -11,7 +11,7 @@ However,you must have an iDevice,like iPhone or iPad,to use the full functions o
 - Manager Your iDevices
 - View the event
 - Operate the files on iCloud
-- Downlaod and uplaod photos
+- Download and upload photos
 
 # Others
 This app is powered by [pyicloud](https://github.com/timlaing/pyicloud),a fork from original pyicloud.  

@@ -10,8 +10,9 @@ from src.login.two_factor_auth import TwoFactorAuthentication
 from src.navbar import NavBar, page_index_map
 from src.pages.devices import DevicesPage
 from src.pages.devices_info import DevicesInfoPage
+from src.pages.account import AccountPage
 from src.pages.settings import SettingsPage
-from src.store import Store
+from src.store import Store, FLET_APP_STORAGE_DATA
 
 
 class RootPage(flet.View):
@@ -30,6 +31,7 @@ class RootPage(flet.View):
                 ]
             )
         ]
+        print("Storage:",FLET_APP_STORAGE_DATA)
 
     def on_route_change(self, content):
         self.content = content
@@ -71,12 +73,19 @@ class App:
                 self.root
             )
             self.page.update()
-            self.page.go("/devices")
+            self.page.go("/account")
         elif t_route.match("/devices"):
-            print("Page devices")
             self.root.on_route_change(
                 flet.Row(
                     controls=[DevicesPage(self.data, self.root)],
+                    expand=True,
+                    alignment=flet.MainAxisAlignment.START
+                )
+            )
+        elif t_route.match("/account"):
+            self.root.on_route_change(
+                flet.Row(
+                    controls=[AccountPage(self.data)],
                     expand=True,
                     alignment=flet.MainAxisAlignment.START
                 )
@@ -121,6 +130,7 @@ class App:
                     ],
                 )
             )
+
         else:
             self.page.views.clear()
         self.page.update()

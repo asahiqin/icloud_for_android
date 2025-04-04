@@ -1,6 +1,6 @@
 from flet import *
 
-from src.store import Store
+from src.store import Store, FLET_APP_STORAGE_DATA
 from src.store import iCloudService
 
 
@@ -36,7 +36,10 @@ class TryLogin(Column):
     def try_login(self):
         try:
             self.store.api = iCloudService(self.username, self.password,
-                                           china_mainland=self.store.china_mainland_option, with_family=True)
+                                           china_mainland=self.store.china_mainland_option, with_family=True,
+                                           cookie_directory=FLET_APP_STORAGE_DATA)
+            self.store.api.session.headers.update({"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                                                                 "Version/18.3.1 Safari/605.1.15"})
             if self.store.api.requires_2fa:
                 self.page.go("/login/2fa")
             else:

@@ -11,7 +11,9 @@ dependencies = [
     "flet==0.27.1",
     "pyicloud @ git+https://github.com/timlaing/pyicloud.git",
     "bidict==0.23.1",
-    "flet-permission-handler==0.1.0"
+    "flet-permission-handler==0.1.0",
+    "pillow==10.4.0",
+    "pydantic-core==2.23.3"
 ]
 
 [tool.flet]

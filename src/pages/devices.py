@@ -124,7 +124,7 @@ class DeviceInformationCard(Card):
         self.content = Container(Column(
             controls=[
                 ListTile(
-                    leading=Icon(device_icon[self.data.device_class]),
+                    leading=Icon(device_icon[self.data.device_class]  if not self.raw_data["isMac"] else Icons.COMPUTER),
                     title=Row(
                         [
                             Text(f"{self.data.name}"),

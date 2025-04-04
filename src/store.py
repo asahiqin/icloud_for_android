@@ -1,3 +1,5 @@
+import os
+
 import flet
 from pyicloud import PyiCloudService
 from pyicloud.services.findmyiphone import AppleDevice
@@ -5,7 +7,8 @@ from pyicloud.services.findmyiphone import AppleDevice
 from src.test.test_pyicloud import TestPyiCloudService
 
 DEBUG_MODE = False
-
+FLET_APP_STORAGE_DATA = os.getenv("FLET_APP_STORAGE_DATA")
+FLET_APP_STORAGE_TEMP = os.getenv("FLET_APP_STORAGE_TEMP")
 iCloudService = PyiCloudService if not DEBUG_MODE else TestPyiCloudService
 
 
@@ -20,6 +23,8 @@ class Store:
         self.devices: dict[str, AppleDevice] | None = None
         self.BAIDU_API_KEY = ""
         self.GOOGLE_API_KEY = ""
+        self.user_name: str = ""
+        self.photo_crop = {"x": 0, "y": 0, "width": 0, "height": 0}
 
     def store_to_device(self):
         store_data = [
@@ -46,6 +51,14 @@ class Store:
             {
                 "k": "GOOGLE_API_KEY",
                 "v": self.GOOGLE_API_KEY
+            },
+            {
+                "k": "user_name",
+                "v": self.user_name
+            },
+            {
+                "k": "photo_crop",
+                "v": self.photo_crop
             }
         ]
         for item in store_data:
@@ -64,3 +77,7 @@ class Store:
         self.BAIDU_API_KEY = self.BAIDU_API_KEY if self.BAIDU_API_KEY is not None else ""
         self.GOOGLE_API_KEY = await self.page.client_storage.get_async("GOOGLE_API_KEY")
         self.GOOGLE_API_KEY = self.GOOGLE_API_KEY if self.GOOGLE_API_KEY is not None else ""
+        self.user_name = await self.page.client_storage.get_async("user_name")
+        self.user_name = self.user_name if self.user_name is not None else ""
+        self.photo_crop = await self.page.client_storage.get_async("photo_crop")
+        self.photo_crop = self.photo_crop if self.photo_crop is not None else {"x": 0, "y": 0, "width": 0, "height": 0}
