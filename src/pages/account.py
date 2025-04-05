@@ -4,6 +4,8 @@ import os.path
 import PIL.Image
 from flet import *
 
+from src.account.family import FamilyComponent
+from src.account.storage import StorageComponent
 from src.store import Store, FLET_APP_STORAGE_DATA, FLET_APP_STORAGE_TEMP
 
 
@@ -15,7 +17,8 @@ class AccountPage(Column):
             leading=ProgressRing(width=40, height=40)
             if not os.path.exists(f"{FLET_APP_STORAGE_TEMP}/mecard_cropped.jpg")
             else Image(src=f"{FLET_APP_STORAGE_TEMP}/mecard_cropped.jpg", border_radius=border_radius.all(100), ),
-            title=Text("" if not self.store.user_name else self.store.user_name)
+            title=Text("" if not self.store.user_name else self.store.user_name),
+            subtitle=Text(self.store.account),
         )
         self.plan = Text("")
         self.expand = True
@@ -25,11 +28,21 @@ class AccountPage(Column):
                     content=Column(
                         [
                             self.profile,
-                            self.plan
+                            ListTile(
+                                title=Row([self.plan],
+                                          alignment=MainAxisAlignment.END
+                                          ),
+                            )
                         ],
                     ),
                     padding=20
                 ),
+            ),
+            ResponsiveRow(
+                [
+                    Card(col=6, content=StorageComponent(store=self.store)),
+                    Card(col=6, content=FamilyComponent(self.store))
+                ]
             )
         ]
 
@@ -68,4 +81,14 @@ class AccountPage(Column):
             cropped.save(f"{FLET_APP_STORAGE_TEMP}/mecard_cropped.jpg")
             self.profile.leading = Image(src=f"{FLET_APP_STORAGE_TEMP}/mecard_cropped.jpg",
                                          border_radius=border_radius.all(100), width=50, height=50, fit=ImageFit.COVER)
+            try:
+                response = self.store.api.session.get(self.store.api.account._gateway_pricing_url)
+                plan = response.json()
+                if plan["paidPlan"]:
+                    self.plan.value = f"iCloud+    {plan['priceForDisplay']} {plan['renewalPeriod'].lower()}"
+                else:
+                    self.plan.value = "Free"
+            except Exception as e:
+                print(e)
+                self.plan.value = "Unknown"
             self.update()

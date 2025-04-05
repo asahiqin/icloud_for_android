@@ -39,7 +39,9 @@ class TryLogin(Column):
                                            china_mainland=self.store.china_mainland_option, with_family=True,
                                            cookie_directory=FLET_APP_STORAGE_DATA)
             self.store.api.session.headers.update({"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                                                                 "Version/18.3.1 Safari/605.1.15"})
+                                                                 "Version/18.3.1 Safari/605.1.15",
+                                                   "Accept-Language": "en-US"})
+
             if self.store.api.requires_2fa:
                 self.page.go("/login/2fa")
             else:

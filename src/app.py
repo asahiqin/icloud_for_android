@@ -2,6 +2,8 @@ import base64
 
 import flet
 from flet.core.template_route import TemplateRoute
+from flet.core.types import PagePlatform
+from flet_permission_handler import PermissionHandler, PermissionType, PermissionStatus
 
 from src.back_button import BackButton
 from src.login.login import Login
@@ -11,6 +13,7 @@ from src.navbar import NavBar, page_index_map
 from src.pages.devices import DevicesPage
 from src.pages.devices_info import DevicesInfoPage
 from src.pages.account import AccountPage
+from src.pages.permission import PermissionPage
 from src.pages.settings import SettingsPage
 from src.store import Store, FLET_APP_STORAGE_DATA
 
@@ -31,7 +34,7 @@ class RootPage(flet.View):
                 ]
             )
         ]
-        print("Storage:",FLET_APP_STORAGE_DATA)
+        print("Storage:", FLET_APP_STORAGE_DATA)
 
     def on_route_change(self, content):
         self.content = content
@@ -56,11 +59,26 @@ class App:
 
     async def init(self):
         await self.data.load_from_device()
+        self.check_permissions()
+
+    def check_permissions(self):
+        permissions = PermissionHandler()
+        self.page.overlay.append(permissions)
+        self.page.update()
+        if self.page.platform == PagePlatform.MACOS:
+            self.default_route("/login")
+            print("skipping permissions check for macOS")
+            return None
+        if not (permissions.check_permission(PermissionType.MANAGE_EXTERNAL_STORAGE, wait_timeout=5)
+                == PermissionStatus.GRANTED):
+            self.default_route("/permissions")
+            return None
+
         self.default_route()
 
-    def default_route(self):
+    def default_route(self, route: str = "/login"):
         self.page.views.clear()
-        self.page.route = "/login"
+        self.page.route = route
 
         # self.route_change(None)
         self.page.update()
@@ -74,6 +92,16 @@ class App:
             )
             self.page.update()
             self.page.go("/account")
+        elif t_route.match("/permissions"):
+            self.page.views.append(
+                flet.View(
+                    "/permissions",
+                    [
+                        PermissionPage(self.page)
+                    ],
+                    appbar=flet.AppBar(title=flet.Text("Permissions"))
+                )
+            )
         elif t_route.match("/devices"):
             self.root.on_route_change(
                 flet.Row(
@@ -94,7 +122,7 @@ class App:
             device_id = base64.b64decode(t_route.device_id_base64).decode('utf-8')
             self.page.views.append(
                 flet.View(
-                    "/devices/"+t_route.device_id_base64,
+                    "/devices/" + t_route.device_id_base64,
                     [DevicesInfoPage(self.data, device_id)],
                     appbar=flet.AppBar(title=flet.Text(f"{self.data.devices[device_id]['name']}"),
                                        leading=BackButton("/devices")),

@@ -31,3 +31,14 @@ class NavBar(NavigationRail):
         self.min_width = 100
         self.min_extended_width = 400
         self.group_alignment = -0.9
+        self.min_extended_width = 200
+
+    def did_mount(self):
+        self.page.on_resized = self.on_resized
+
+    def on_resized(self, _):
+        if self.page.width < 800:
+            self.extended = False
+        else:
+            self.extended = True
+        self.update()

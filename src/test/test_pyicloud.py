@@ -1,5 +1,6 @@
 from time import sleep
 
+from src.test.test_account import TestAccount
 from src.test.test_contacts import TestContacts
 from src.test.test_devices import test_devices
 
@@ -80,3 +81,7 @@ class TestPyiCloudService:
     @property
     def contacts(self):
         return TestContacts()
+
+    @property
+    def account(self):
+        return TestAccount()

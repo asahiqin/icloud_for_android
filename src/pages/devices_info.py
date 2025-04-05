@@ -59,7 +59,10 @@ class DevicesLocationData:
 class DevicesLocation(Column):
     def __init__(self, store: Store, device_id: str):
         super().__init__()
-        self.location = store.devices[device_id].location()
+        try:
+            self.location = store.devices[device_id].location
+        except:
+            self.location = None
         print(self.location)
         self.store = store
         self.expand = True
